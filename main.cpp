@@ -19,20 +19,32 @@ vector<string> split(const string &s, char delim) {
     return myVec;
 }
 
-// Prints the full board
-void printBoard( vector< vector<string> > &board){
-    for (int i = 0; i < board.size(); i++)
-        for (int j = 0; j < board[i].size(); j++)
-            cout << board[i][j] << " ";
-}
-
 int main(){
     
     string row;
     vector<string> tempVec;
     vector< vector<string> > board;
     
+    tempVec.clear();
+    tempVec.push_back("0");
+    tempVec.push_back("1");
+    tempVec.push_back("3");
+    board.push_back(tempVec);
     
+    tempVec.clear();
+    tempVec.push_back("4");
+    tempVec.push_back("2");
+    tempVec.push_back("5");
+    board.push_back(tempVec);
+    
+    tempVec.clear();
+    tempVec.push_back("7");
+    tempVec.push_back("8");
+    tempVec.push_back("6");
+    board.push_back(tempVec);
+    
+    
+    /*
     cout << "Enter your puzzle, use a zero to represent the blank" << endl;
     cout << "Enter the first row,   use space or tabs between numbers\t";
     getline(cin, row);
@@ -48,11 +60,12 @@ int main(){
     getline(cin, row);
     tempVec =  split( row , ' ');
     board.push_back(tempVec);
+     */
     
     
-    State state(board);
-    
-    
+    State state(board, 0);
+    state.printBoard();
+    state.printStateInfo();
     
     
     

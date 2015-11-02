@@ -9,18 +9,28 @@ using namespace std;
 class State {
     
 private:
-    // F, G, H
+    // Variable: F, G, H
     int priority, moves, manhatten;
     
-    // Current Board State
+    // Variable: Current Board State
     vector< vector<string> > board;
     
     // Function: Calculates Manhatten Distance of current board
     int CalculateManhattenDistance(vector< vector<string> > &board);
     
+    // Function: Calculates current tile position distance from goal tile position
+    int DistanceToGoal(int x, int y);
+    
 public:
     
-    State( vector< vector<string> > board );
+    // Constructor
+    State( vector< vector<string> > board, int moves );
+    
+    // Prints the full board
+    void printBoard();
+    
+    // Prints state info
+    void printStateInfo();
     
 };
 
