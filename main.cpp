@@ -19,11 +19,21 @@ vector<string> split(const string &s, char delim) {
     return myVec;
 }
 
+// Compare Struct to create Minimum Priority Que
+struct compare
+{
+    bool operator()(const int& left, const int& right)
+    {
+        return left > right;
+    }
+};
+
 int main(){
     
     string row;
     vector<string> tempVec;
     vector< vector<string> > board;
+    priority_queue<int,vector<State>, compare > minPriorityQueue;
     
     tempVec.clear();
     tempVec.push_back("0");

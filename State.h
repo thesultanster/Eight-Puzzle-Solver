@@ -32,6 +32,8 @@ public:
     // Prints state info
     void printStateInfo();
     
+    struct State::CompareState : public binary_function<State*, State*, bool>
+    
 };
 
 

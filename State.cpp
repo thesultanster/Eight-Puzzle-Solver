@@ -64,6 +64,14 @@ int State::CalculateManhattenDistance(vector< vector<string> > &board){
     
 }
 
+struct State::CompareState : public binary_function<State*, State*, bool>
+{
+    bool operator()(const State* lhs, const State* rhs) const
+    {
+        return lhs->getPriority() < rhs->getPriority();
+    }
+};
+
 // Prints the full board
 void State::printBoard(){
     for (int i = 0; i < this->board.size(); i++){
