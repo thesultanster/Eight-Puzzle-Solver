@@ -1,4 +1,6 @@
 
+#include <iostream>
+#include <queue>
 #include "State.h"
 
 
@@ -19,12 +21,12 @@ vector<string> split(const string &s, char delim) {
     return myVec;
 }
 
-// Compare Struct to create Minimum Priority Que
-struct compare
+// Compare State Struct to create Minimum Priority Que
+struct CompareState : public binary_function<State*, State*, bool>
 {
-    bool operator()(const int& left, const int& right)
+    bool operator()( const State* lhs, const State* rhs) const
     {
-        return left > right;
+        return lhs->getPriority() < rhs->getPriority();
     }
 };
 
@@ -33,7 +35,7 @@ int main(){
     string row;
     vector<string> tempVec;
     vector< vector<string> > board;
-    priority_queue<int,vector<State>, compare > minPriorityQueue;
+    std::priority_queue<State*,vector<State*>, CompareState > minPriorityQueue;
     
     tempVec.clear();
     tempVec.push_back("0");
@@ -76,6 +78,8 @@ int main(){
     State state(board, 0);
     state.printBoard();
     state.printStateInfo();
+    
+    minPriorityQueue.push(&state);
     
     
     

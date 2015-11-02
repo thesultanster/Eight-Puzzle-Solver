@@ -26,14 +26,14 @@ public:
     // Constructor
     State( vector< vector<string> > board, int moves );
     
+    // Returns Priority value
+    const int getPriority() const;
+    
     // Prints the full board
     void printBoard();
     
     // Prints state info
     void printStateInfo();
-    
-    struct State::CompareState : public binary_function<State*, State*, bool>
-    
 };
 
 

@@ -61,16 +61,13 @@ int State::CalculateManhattenDistance(vector< vector<string> > &board){
     // TODO: Delete This
     //cout << endl << distance << endl;
     return distance;
-    
+
 }
 
-struct State::CompareState : public binary_function<State*, State*, bool>
-{
-    bool operator()(const State* lhs, const State* rhs) const
-    {
-        return lhs->getPriority() < rhs->getPriority();
-    }
-};
+// Prints the full board
+const int State::getPriority() const{
+    return this->priority;
+}
 
 // Prints the full board
 void State::printBoard(){
