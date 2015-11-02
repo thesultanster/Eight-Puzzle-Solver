@@ -26,7 +26,7 @@ struct CompareState : public binary_function<State*, State*, bool>
 {
     bool operator()( const State* lhs, const State* rhs) const
     {
-        return lhs->getPriority() < rhs->getPriority();
+        return lhs->getPriority() > rhs->getPriority();
     }
 };
 
@@ -81,6 +81,35 @@ int main(){
     
     minPriorityQueue.push(&state);
     
+    
+    board.clear();
+    tempVec.clear();
+    tempVec.push_back("4");
+    tempVec.push_back("1");
+    tempVec.push_back("3");
+    board.push_back(tempVec);
+    
+    tempVec.clear();
+    tempVec.push_back("0");
+    tempVec.push_back("2");
+    tempVec.push_back("5");
+    board.push_back(tempVec);
+    
+    tempVec.clear();
+    tempVec.push_back("7");
+    tempVec.push_back("8");
+    tempVec.push_back("6");
+    board.push_back(tempVec);
+    
+    
+    State state2(board, 1);
+    state2.printBoard();
+    state2.printStateInfo();
+    minPriorityQueue.push(&state2);
+    
+    
+    State newState(minPriorityQueue.top());
+    newState.printBoard();
     
     
     return 0;

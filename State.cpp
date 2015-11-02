@@ -19,6 +19,16 @@ State::State(vector< vector<string> > board, int moves) {
     this->priority = this->moves + this->manhatten;
 }
 
+// Constructor
+State::State(State* state) {
+    
+    // Copy Board
+    this->board = state->board;
+    this->manhatten = state->manhatten;
+    this->moves = state->moves;
+    this->priority = state->priority;
+}
+
 // Calculates Distance of current tile to goal tile
 int State::DistanceToGoal( int x, int y){
     

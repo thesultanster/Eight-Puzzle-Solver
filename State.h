@@ -26,6 +26,9 @@ public:
     // Constructor
     State( vector< vector<string> > board, int moves );
     
+    // Constructor
+    State( State* state );
+    
     // Returns Priority value
     const int getPriority() const;
     
