@@ -1,11 +1,6 @@
-// Created by Sultan Khan
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <sstream>
 #include "State.h"
-using namespace std;
+
 
 // Helper Function to put split results in a premade vector
 vector<string> &split(const string &s, char delim, vector<string> &myVec) {
@@ -55,6 +50,7 @@ int main(){
     board.push_back(tempVec);
     
     
+    State state(board);
     
     
     
