@@ -32,35 +32,39 @@ struct CompareState : public binary_function<State, State, bool>
 };
 
 
-void GenerateAllPossibleMoves( State state, priority_queue<State,vector<State>, CompareState > &activeQueue){
+void GenerateAllPossibleMoves( State state, priority_queue<State,vector<State>, CompareState > &activeQueue,map< string , bool> &visitedMap, int algo){
     
     int blankX = state.getBlankX();
     int blankY = state.getBlankY();
     vector<State*> states;
     
     
-    cout << "Children ===========" << endl;
+    //cout << "Children ===========" << endl;
     
     // Move Left, if possible
     if((blankY - 1) >= 0){
         vector< vector<string> > newBoard = state.getBoard();
         iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX].begin() + (blankY-1));
-        State newState( &state, newBoard, state.getMoves()+1 );
-        newState.printBoard();
-        newState.printStateInfo();
-        if( newState.getPriority() <= state.getPriority())
+        State newState( &state, newBoard, state.getMoves()+1 , algo);
+        
+        if( visitedMap[newState.getString()] == false){
             activeQueue.push(newState);
+            //newState.printBoard();
+            //newState.printStateInfo();
+        }
+        
     }
     
     // Move Right, if possible
     if((blankY + 1) < 3){
         vector< vector<string> > newBoard = state.getBoard();
         iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX].begin() + (blankY+1));
-        State newState ( &state, newBoard, state.getMoves()+1 );
-        newState.printBoard();
-        newState.printStateInfo();
-        if( newState.getPriority() <= state.getPriority())
+        State newState ( &state, newBoard, state.getMoves()+1, algo );
+        if( visitedMap[newState.getString()] == false){
             activeQueue.push(newState);
+            //newState.printBoard();
+            //newState.printStateInfo();
+        }
 
     }
     
@@ -68,11 +72,12 @@ void GenerateAllPossibleMoves( State state, priority_queue<State,vector<State>, 
     if((blankX - 1) >= 0){
         vector< vector<string> > newBoard = state.getBoard();
         iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX-1].begin() + (blankY));
-        State newState( &state, newBoard, state.getMoves()+1 );
-        newState.printBoard();
-        newState.printStateInfo();
-        if( newState.getPriority() <= state.getPriority())
+        State newState( &state, newBoard, state.getMoves()+1, algo );
+        if( visitedMap[newState.getString()] == false){
             activeQueue.push(newState);
+            //newState.printBoard();
+            //newState.printStateInfo();
+        }
 
     }
     
@@ -81,15 +86,15 @@ void GenerateAllPossibleMoves( State state, priority_queue<State,vector<State>, 
        
         vector< vector<string> > newBoard = state.getBoard();
         iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX+1].begin() + (blankY));
-        State newState( &state, newBoard, state.getMoves()+1 );
-        newState.printBoard();
-        newState.printStateInfo();
-        if( newState.getPriority() <= state.getPriority())
+        State newState( &state, newBoard, state.getMoves()+1, algo );
+        if( visitedMap[newState.getString()] == false){
             activeQueue.push(newState);
-
+            //newState.printBoard();
+            //newState.printStateInfo();
+        }
     }
     
-    cout << "====================" << endl;
+    //cout << "====================" << endl;
     
     
 }
@@ -101,7 +106,7 @@ int main(){
     vector<string> tempVec;
     vector< vector<string> > board;
     priority_queue<State,vector<State>, CompareState > activeQueue;
-    map< pair<int,int> , bool> visitedMap;
+    map< string , bool> visitedMap;
     
     /*
     tempVec.clear();
@@ -139,14 +144,19 @@ int main(){
     getline(cin, row);
     tempVec =  split( row , ' ');
     board.push_back(tempVec);
-     
+    
+    cout << "0. Uniform Cost Search\n1. Manhatten Heuristic\n3. Misplaced Tile Heuristic\n";
+    int algo;
+    cin >> algo;
     
     
-    State state(board, 0);
+    
+    State state(board, 0, algo);
     state.printBoard();
     state.printStateInfo();
-    
+
     activeQueue.push(state);
+    
     
     
     while (true) {
@@ -160,10 +170,12 @@ int main(){
         State state = activeQueue.top();
         cout << "State Topped: *******" << endl;
         state.printBoard();
-        cout << "*********************" << endl;
+        state.printStateInfo();
+        visitedMap[state.getString()] = true;
+        cout << "*********************" << endl << endl;
 
         // If this new state is the goal state, then exit
-        cout << "Check If Goal State" << endl;
+        //cout << "Check If Goal State" << endl;
         if(state.isGoalState()){
             cout << "Goal State Found!!!" << endl;
             state.printBoard();
@@ -175,8 +187,8 @@ int main(){
         activeQueue.pop();
         
         // Calculate All possible next states
-        cout << "Generate Children" << endl;
-        GenerateAllPossibleMoves(state,activeQueue);
+        //cout << "Generate Children" << endl;
+        GenerateAllPossibleMoves(state,activeQueue, visitedMap, algo);
         
     
             // Pick Lowest new priority compared previous removed state, and add to queue

@@ -14,6 +14,8 @@ private:
 
     int blankX, blankY;
     
+    int algo;
+    
     // Parent State
     State* parent;
     
@@ -23,16 +25,19 @@ private:
     // Function: Calculates Manhatten Distance of current board
     int CalculateManhattenDistance(vector< vector<string> > &board);
     
+    // Function: Calculates Manhatten Distance of current board
+    int CalculateMisplacedTile(vector< vector<string> > &board);
+    
     // Function: Calculates current tile position distance from goal tile position
     int DistanceToGoal(int x, int y);
     
 public:
     
     // Constructor
-    State(State* parent, vector< vector<string> > board, int moves);
+    State(State* parent, vector< vector<string> > board, int moves, int algo);
     
     // Constructor
-    State( vector< vector<string> > board, int moves );
+    State( vector< vector<string> > board, int moves, int algo );
     
     vector<State*> GenerateAllPossibleMoves();
     
@@ -53,6 +58,7 @@ public:
     
     vector< vector<string> > getBoard();
     
+    string getString();
     
     // Prints the full board
     void printBoard();

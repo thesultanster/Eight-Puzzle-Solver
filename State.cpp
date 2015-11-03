@@ -5,10 +5,12 @@
 using namespace std;
 
 // Constructor
-State::State(vector< vector<string> > board, int moves) {
+State::State(vector< vector<string> > board, int moves, int algo) {
     
     this->parent = NULL;
     
+    this->algo = algo;
+    
     // Copy Board
     this->board = board;
     
@@ -19,14 +21,26 @@ State::State(vector< vector<string> > board, int moves) {
     this->moves = moves;
     
     // Calculate Priority
-    this->priority = this->moves + this->manhatten;
-}
+    switch (algo) {
+        case 0:
+            break;
+        case 1:
+            this->priority = this->moves + this->manhatten;
+            break;
+        case 2:
+            this->priority = this->moves + this->misplaced;
+            break;
+        default:
+            break;
+    }}
 
 // Constructor
-State::State(State* parent, vector< vector<string> > board, int moves) {
+State::State(State* parent, vector< vector<string> > board, int moves, int algo) {
     
     this->parent = parent;
     
+    this->algo = algo;
+    
     // Copy Board
     this->board = board;
     
@@ -37,68 +51,21 @@ State::State(State* parent, vector< vector<string> > board, int moves) {
     this->moves = moves;
     
     // Calculate Priority
-    this->priority = this->moves + this->manhatten;
+    switch (algo) {
+        case 0:
+            break;
+        case 1:
+            this->priority = this->moves + this->manhatten;
+            break;
+        case 2:
+            this->priority = this->moves + this->misplaced;
+            break;
+        default:
+            break;
+    }
 }
 
 
-/*
-vector<State*> State::GenerateAllPossibleMoves(){
-    
-    vector<State*> *states = new vector<State*>();
-    vector< vector<string> > newBoard;
-    
-    cout << "Children ===========" << endl;
-    
-    // Move Left, if possible
-    if((blankY - 1) >= 0){
-        newBoard = this->board;
-        iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX].begin() + (blankY-1));
-        State newState = new State( this, newBoard, this->moves+1 );
-        State* ptr = &newState;
-        states->push_back(ptr);
-        newState.printBoard();
-        newState.printStateInfo();
-    }
-    
-    // Move Right, if possible
-    if((blankY + 1) >= 0){
-        newBoard = this->board;
-        iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX].begin() + (blankY+1));
-        State newState = new State( this, newBoard, this->moves+1 );
-        State* ptr = &newState;
-        states->push_back(ptr);
-        newState.printBoard();
-        newState.printStateInfo();
-    }
-    
-    // Move Top, if possible
-    if((blankX + 1) >= 0){
-        newBoard = this->board;
-        iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX+1].begin() + (blankY));
-        State newState = new State( this, newBoard, this->moves+1 );
-        State* ptr = &newState;
-        states->push_back(ptr);
-        newState.printBoard();
-        newState.printStateInfo();
-    }
-    
-    // Move Bottom, if possible
-    if((blankX - 1) >= 0){
-        newBoard = this->board;
-        iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX-1].begin() + (blankY));
-        State newState = new State( this, newBoard, this->moves+1 );
-        State* ptr = &newState;
-        states->push_back(ptr);
-        newState.printBoard();
-        newState.printStateInfo();
-    }
-    
-    cout << "====================" << endl;
-    
-    return *states;
-
-}
- */
 
 // Calculates Distance of current tile to goal tile
 int State::DistanceToGoal( int x, int y){
@@ -201,6 +168,20 @@ vector< vector<string> > State::getBoard(){
     return this->board;
 }
 
+string State::getString(){
+    
+    string temp;
+    
+    for (int i = 0; i < this->board.size(); i++){
+        for (int j = 0; j < this->board[i].size(); j++){
+            temp += this->board[i][j] + " ";
+        }
+    }
+    
+    return temp;
+
+}
+
 
 // Prints the full board
 void State::printBoard(){
@@ -252,6 +233,7 @@ State& State::operator=(State rhs){
     this->priority = rhs.priority;
     this->blankX = rhs.blankX;
     this->blankY = rhs.blankY;
+    this->algo = rhs.algo;
     
     return *this;
     
