@@ -7,17 +7,39 @@ using namespace std;
 // Constructor
 State::State(vector< vector<string> > board, int moves) {
     
+    this->parent = NULL;
+    
     // Copy Board
     this->board = board;
     
     // Calculate Manhatten Distance
     this->manhatten = CalculateManhattenDistance(board);
     
+    // Number of moves
     this->moves = moves;
     
     // Calculate Priority
     this->priority = this->moves + this->manhatten;
 }
+
+// Constructor
+State::State(State* parent, vector< vector<string> > board, int moves) {
+    
+    this->parent = parent;
+    
+    // Copy Board
+    this->board = board;
+    
+    // Calculate Manhatten Distance
+    this->manhatten = CalculateManhattenDistance(board);
+    
+    // Number of moves
+    this->moves = moves;
+    
+    // Calculate Priority
+    this->priority = this->moves + this->manhatten;
+}
+
 
 // Constructor
 State::State(State* state) {
@@ -30,17 +52,20 @@ State::State(State* state) {
     this->priority = state->priority;
 }
 
-vector<State> State::GenerateAllPossibleMoves(){
+vector<State*> State::GenerateAllPossibleMoves(){
     
-    vector<State> states;
+    vector<State*> *states = new vector<State*>();
     vector< vector<string> > newBoard;
+    
+    cout << "Children ===========" << endl;
     
     // Move Left, if possible
     if((blankY - 1) >= 0){
         newBoard = this->board;
         iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX].begin() + (blankY-1));
-        State newState( newBoard, this->moves+1 );
-        states.push_back(newState);
+        State newState = new State( this, newBoard, this->moves+1 );
+        State* ptr = &newState;
+        states->push_back(ptr);
         newState.printBoard();
         newState.printStateInfo();
     }
@@ -49,8 +74,9 @@ vector<State> State::GenerateAllPossibleMoves(){
     if((blankY + 1) >= 0){
         newBoard = this->board;
         iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX].begin() + (blankY+1));
-        State newState( newBoard, this->moves+1 );
-        states.push_back(newState);
+        State newState = new State( this, newBoard, this->moves+1 );
+        State* ptr = &newState;
+        states->push_back(ptr);
         newState.printBoard();
         newState.printStateInfo();
     }
@@ -59,8 +85,9 @@ vector<State> State::GenerateAllPossibleMoves(){
     if((blankX + 1) >= 0){
         newBoard = this->board;
         iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX+1].begin() + (blankY));
-        State newState( newBoard, this->moves+1 );
-        states.push_back(newState);
+        State newState = new State( this, newBoard, this->moves+1 );
+        State* ptr = &newState;
+        states->push_back(ptr);
         newState.printBoard();
         newState.printStateInfo();
     }
@@ -69,13 +96,16 @@ vector<State> State::GenerateAllPossibleMoves(){
     if((blankX - 1) >= 0){
         newBoard = this->board;
         iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX-1].begin() + (blankY));
-        State newState( newBoard, this->moves+1 );
-        states.push_back(newState);
+        State newState = new State( this, newBoard, this->moves+1 );
+        State* ptr = &newState;
+        states->push_back(ptr);
         newState.printBoard();
         newState.printStateInfo();
     }
     
-    return states;
+    cout << "====================" << endl;
+    
+    return *states;
 
 }
 
@@ -126,6 +156,7 @@ int State::CalculateManhattenDistance(vector< vector<string> > &board){
     
     // TODO: Delete This
     //cout << endl << distance << endl;
+    
     return distance;
 
 }
@@ -135,20 +166,32 @@ const int State::getPriority() const{
     return this->priority;
 }
 
-bool operator==(const State& lhs, const State& rhs){
-    
-    for (int i = 0; i < lhs.board.size(); i++)
-        for (int j = 0; j < lhs.board[i].size(); j++)
-            if(lhs.board[i][j] != rhs.board[i][j])
-                return false;
-    
-    return true;
+State* State::getParent() {
+    return this;
 }
 
+bool State::isGoalState() {
+    
+    int sum = 1;
+    for (int i = 0; i < this->board.size(); i++){
+        for (int j = 0; j < this->board[i].size(); j++){
+            
+            int currentValue = atoi(board[i][j].c_str());
+            
+            if( i == 2 && j == 2 && currentValue == 0 && sum == 9){
+                cout << "last tile" << endl;
+                return true;
+            } else if( sum != currentValue){
+                return false;
+            }
+            
+            sum++;
+        }
+    }
+    
+    cout << "outside check loop" << endl;
+    return true;
 
-bool operator!=(const State& lhs, const State& rhs)
-{
-    return !operator==(lhs,rhs);
 }
 
 // Prints the full board
@@ -166,4 +209,22 @@ void State::printStateInfo(){
     cout << "Manhatten Distance: "  << this->manhatten  << endl;
     cout << "Moves: "               << this->moves      << endl;
     cout << "Priority : "           << this->priority   << endl << endl;
+}
+
+// Friend Overload Function
+bool operator==(const State& lhs, const State& rhs){
+    
+    for (int i = 0; i < lhs.board.size(); i++)
+        for (int j = 0; j < lhs.board[i].size(); j++)
+            if(lhs.board[i][j] != rhs.board[i][j])
+                return false;
+    
+    return true;
+}
+
+// Friend Overload Function
+
+bool operator!=(const State& lhs, const State& rhs)
+{
+    return !operator==(lhs,rhs);
 }

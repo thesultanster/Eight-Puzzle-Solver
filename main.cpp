@@ -84,9 +84,8 @@ int main(){
     
     activeQueue.push(&state);
     
-    state.GenerateAllPossibleMoves();
     
-    /*
+    
     while (true) {
         if (activeQueue.empty()) {
             cout << "Active Queue is now Empty" << endl;
@@ -94,13 +93,17 @@ int main(){
         }
         
         // Top off best state from queue
-        State state(activeQueue.top());
+        State* state(activeQueue.top());
+        cout << "State Topped: *******" << endl;
+        state->printBoard();
+        cout << "*********************" << endl;
 
         // If this new state is the goal state, then exit
-        if(state.IsGoalState()){
+        cout << "Check If Goal State" << endl;
+        if(state->isGoalState()){
             cout << "Goal State Found!!!" << endl;
-            state.printBoard();
-            state.printStateInfo();
+            state->printBoard();
+            state->printStateInfo();
             break;
         }
         
@@ -108,17 +111,39 @@ int main(){
         activeQueue.pop();
         
         // Calculate All possible next states
-        vector<State> moves = state.GenerateAllPossibleMoves();
+        cout << "Generate Children" << endl;
+        vector<State*> moves = state->GenerateAllPossibleMoves();
         
-        while (<#condition#>) {
+        for (int i = 0; i < moves.size(); i++) {
+            cout << "Checking Parent " << i << endl;
+            
+            if(state->getParent() != NULL){
+                // Check new state is not the previous one
+                cout << "Checking Child " << i << endl;
+                if(moves[i] != state->getParent()){
+            
+                    cout << "Going to Push: " << endl;
+                    moves[i]->printBoard();
+                    activeQueue.push((moves[i]));
+                    cout << "Push Succussfull: " << endl;
+                    State* state(activeQueue.top());
+                    cout << "State Pushed: #######" << endl;
+                    state->printBoard();
+                    state->printStateInfo();
+                    cout << "#####################" << endl;
+                
+                }
+            }
+            
+        }
             // Pick Lowest new priority compared previous removed state, and add to queue
 
-            <#statements#>
-        }
-        
-        
+
     }
-     */
+        
+        
+    
+    
     
     
     /*
@@ -145,12 +170,9 @@ int main(){
     State state2(board, 1);
     state2.printBoard();
     state2.printStateInfo();
-    minPriorityQueue.push(&state2);
+    activeQueue.push(&state2);
+    */
     
-    
-    State newState(minPriorityQueue.top());
-    newState.printBoard();
-     */
     
     
     return 0;

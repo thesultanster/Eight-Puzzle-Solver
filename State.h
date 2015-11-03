@@ -14,6 +14,9 @@ private:
 
     int blankX, blankY;
     
+    // Parent State
+    State* parent;
+    
     // Variable: Current Board State
     vector< vector<string> > board;
     
@@ -26,17 +29,24 @@ private:
 public:
     
     // Constructor
+    State(State* parent, vector< vector<string> > board, int moves);
+    
+    // Constructor
     State( vector< vector<string> > board, int moves );
     
     // Constructor
     State( State* state );
     
-    vector<State> GenerateAllPossibleMoves();
+    vector<State*> GenerateAllPossibleMoves();
     
-    bool IsGoalState();
+    // Checks if we reached goal state
+    bool isGoalState();
     
     // Returns Priority value
     const int getPriority() const;
+    
+    // Returns Parent State value
+    State* getParent();
     
     // Prints the full board
     void printBoard();
