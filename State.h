@@ -34,9 +34,6 @@ public:
     // Constructor
     State( vector< vector<string> > board, int moves );
     
-    // Constructor
-    State( State* state );
-    
     vector<State*> GenerateAllPossibleMoves();
     
     // Checks if we reached goal state
@@ -48,6 +45,15 @@ public:
     // Returns Parent State value
     State* getParent();
     
+    int getBlankX();
+    
+    int getBlankY();
+    
+    int getMoves();
+    
+    vector< vector<string> > getBoard();
+    
+    
     // Prints the full board
     void printBoard();
     
@@ -56,6 +62,7 @@ public:
     
     friend bool operator==(const State& lhs, const State& rhs);
     friend bool operator!=(const State& lhs, const State& rhs);
+    State& operator=(State rhs);
 
 };
 

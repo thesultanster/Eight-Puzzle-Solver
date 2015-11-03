@@ -41,17 +41,7 @@ State::State(State* parent, vector< vector<string> > board, int moves) {
 }
 
 
-// Constructor
-State::State(State* state) {
-    
-    // Copy Board
-    this->board = state->board;
-    // Recalculate so we can get the blankX and blankY values
-    this->manhatten = CalculateManhattenDistance(this->board);
-    this->moves = state->moves;
-    this->priority = state->priority;
-}
-
+/*
 vector<State*> State::GenerateAllPossibleMoves(){
     
     vector<State*> *states = new vector<State*>();
@@ -108,6 +98,7 @@ vector<State*> State::GenerateAllPossibleMoves(){
     return *states;
 
 }
+ */
 
 // Calculates Distance of current tile to goal tile
 int State::DistanceToGoal( int x, int y){
@@ -194,6 +185,23 @@ bool State::isGoalState() {
 
 }
 
+int State::getBlankX(){
+    return this->blankX;
+}
+
+int State::getBlankY(){
+    return this->blankY;
+}
+
+int State::getMoves(){
+    return this->moves;
+}
+
+vector< vector<string> > State::getBoard(){
+    return this->board;
+}
+
+
 // Prints the full board
 void State::printBoard(){
     for (int i = 0; i < this->board.size(); i++){
@@ -228,3 +236,25 @@ bool operator!=(const State& lhs, const State& rhs)
 {
     return !operator==(lhs,rhs);
 }
+
+State& State::operator=(State rhs){
+    
+
+    
+    for (int i = 0; i < this->board.size(); i++)
+        for (int j = 0; j < this->board[i].size(); j++)
+            this->board[i][j] = rhs.board[i][j];
+            
+    
+    this->parent = rhs.parent;
+    this->moves = rhs.moves;
+    this->manhatten = rhs.manhatten;
+    this->priority = rhs.priority;
+    this->blankX = rhs.blankX;
+    this->blankY = rhs.blankY;
+    
+    return *this;
+    
+    
+}
+

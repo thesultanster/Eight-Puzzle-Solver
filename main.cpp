@@ -23,13 +23,76 @@ vector<string> split(const string &s, char delim) {
 }
 
 // Compare State Struct to create Minimum Priority Que
-struct CompareState : public binary_function<State*, State*, bool>
+struct CompareState : public binary_function<State, State, bool>
 {
-    bool operator()( const State* lhs, const State* rhs) const
+    bool operator()( const State lhs, const State rhs) const
     {
-        return lhs->getPriority() > rhs->getPriority();
+        return lhs.getPriority() > rhs.getPriority();
     }
 };
+
+
+void GenerateAllPossibleMoves( State state, priority_queue<State,vector<State>, CompareState > &activeQueue){
+    
+    int blankX = state.getBlankX();
+    int blankY = state.getBlankY();
+    vector<State*> states;
+    
+    
+    cout << "Children ===========" << endl;
+    
+    // Move Left, if possible
+    if((blankY - 1) >= 0){
+        vector< vector<string> > newBoard = state.getBoard();
+        iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX].begin() + (blankY-1));
+        State newState( &state, newBoard, state.getMoves()+1 );
+        newState.printBoard();
+        newState.printStateInfo();
+        if( newState.getPriority() <= state.getPriority())
+            activeQueue.push(newState);
+    }
+    
+    // Move Right, if possible
+    if((blankY + 1) < 3){
+        vector< vector<string> > newBoard = state.getBoard();
+        iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX].begin() + (blankY+1));
+        State newState ( &state, newBoard, state.getMoves()+1 );
+        newState.printBoard();
+        newState.printStateInfo();
+        if( newState.getPriority() <= state.getPriority())
+            activeQueue.push(newState);
+
+    }
+    
+    // Move Top, if possible
+    if((blankX - 1) >= 0){
+        vector< vector<string> > newBoard = state.getBoard();
+        iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX-1].begin() + (blankY));
+        State newState( &state, newBoard, state.getMoves()+1 );
+        newState.printBoard();
+        newState.printStateInfo();
+        if( newState.getPriority() <= state.getPriority())
+            activeQueue.push(newState);
+
+    }
+    
+    // Move Bottom, if possible
+    if((blankX + 1) < 3){
+       
+        vector< vector<string> > newBoard = state.getBoard();
+        iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX+1].begin() + (blankY));
+        State newState( &state, newBoard, state.getMoves()+1 );
+        newState.printBoard();
+        newState.printStateInfo();
+        if( newState.getPriority() <= state.getPriority())
+            activeQueue.push(newState);
+
+    }
+    
+    cout << "====================" << endl;
+    
+    
+}
 
 
 int main(){
@@ -37,29 +100,30 @@ int main(){
     string row;
     vector<string> tempVec;
     vector< vector<string> > board;
-    priority_queue<State*,vector<State*>, CompareState > activeQueue;
+    priority_queue<State,vector<State>, CompareState > activeQueue;
     map< pair<int,int> , bool> visitedMap;
     
+    /*
     tempVec.clear();
-    tempVec.push_back("0");
     tempVec.push_back("1");
+    tempVec.push_back("2");
     tempVec.push_back("3");
     board.push_back(tempVec);
     
     tempVec.clear();
     tempVec.push_back("4");
-    tempVec.push_back("2");
-    tempVec.push_back("5");
+    tempVec.push_back("0");
+    tempVec.push_back("6");
     board.push_back(tempVec);
     
     tempVec.clear();
     tempVec.push_back("7");
+    tempVec.push_back("5");
     tempVec.push_back("8");
-    tempVec.push_back("6");
     board.push_back(tempVec);
+    */
     
     
-    /*
     cout << "Enter your puzzle, use a zero to represent the blank" << endl;
     cout << "Enter the first row,   use space or tabs between numbers\t";
     getline(cin, row);
@@ -75,35 +139,35 @@ int main(){
     getline(cin, row);
     tempVec =  split( row , ' ');
     board.push_back(tempVec);
-     */
+     
     
     
     State state(board, 0);
     state.printBoard();
     state.printStateInfo();
     
-    activeQueue.push(&state);
-    
+    activeQueue.push(state);
     
     
     while (true) {
+        
         if (activeQueue.empty()) {
-            cout << "Active Queue is now Empty" << endl;
+            cout << "Active Queue is Empty" << endl;
             break;
         }
         
         // Top off best state from queue
-        State* state(activeQueue.top());
+        State state = activeQueue.top();
         cout << "State Topped: *******" << endl;
-        state->printBoard();
+        state.printBoard();
         cout << "*********************" << endl;
 
         // If this new state is the goal state, then exit
         cout << "Check If Goal State" << endl;
-        if(state->isGoalState()){
+        if(state.isGoalState()){
             cout << "Goal State Found!!!" << endl;
-            state->printBoard();
-            state->printStateInfo();
+            state.printBoard();
+            state.printStateInfo();
             break;
         }
         
@@ -112,30 +176,9 @@ int main(){
         
         // Calculate All possible next states
         cout << "Generate Children" << endl;
-        vector<State*> moves = state->GenerateAllPossibleMoves();
+        GenerateAllPossibleMoves(state,activeQueue);
         
-        for (int i = 0; i < moves.size(); i++) {
-            cout << "Checking Parent " << i << endl;
-            
-            if(state->getParent() != NULL){
-                // Check new state is not the previous one
-                cout << "Checking Child " << i << endl;
-                if(moves[i] != state->getParent()){
-            
-                    cout << "Going to Push: " << endl;
-                    moves[i]->printBoard();
-                    activeQueue.push((moves[i]));
-                    cout << "Push Succussfull: " << endl;
-                    State* state(activeQueue.top());
-                    cout << "State Pushed: #######" << endl;
-                    state->printBoard();
-                    state->printStateInfo();
-                    cout << "#####################" << endl;
-                
-                }
-            }
-            
-        }
+    
             // Pick Lowest new priority compared previous removed state, and add to queue
 
 
