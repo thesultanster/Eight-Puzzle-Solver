@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <queue>
+#include <map>
 #include "State.h"
 
 
@@ -30,12 +31,14 @@ struct CompareState : public binary_function<State*, State*, bool>
     }
 };
 
+
 int main(){
     
     string row;
     vector<string> tempVec;
     vector< vector<string> > board;
-    std::priority_queue<State*,vector<State*>, CompareState > minPriorityQueue;
+    priority_queue<State*,vector<State*>, CompareState > activeQueue;
+    map< pair<int,int> , bool> visitedMap;
     
     tempVec.clear();
     tempVec.push_back("0");
@@ -79,9 +82,46 @@ int main(){
     state.printBoard();
     state.printStateInfo();
     
-    minPriorityQueue.push(&state);
+    activeQueue.push(&state);
+    
+    state.GenerateAllPossibleMoves();
+    
+    /*
+    while (true) {
+        if (activeQueue.empty()) {
+            cout << "Active Queue is now Empty" << endl;
+            break;
+        }
+        
+        // Top off best state from queue
+        State state(activeQueue.top());
+
+        // If this new state is the goal state, then exit
+        if(state.IsGoalState()){
+            cout << "Goal State Found!!!" << endl;
+            state.printBoard();
+            state.printStateInfo();
+            break;
+        }
+        
+        // Remove new state form active list
+        activeQueue.pop();
+        
+        // Calculate All possible next states
+        vector<State> moves = state.GenerateAllPossibleMoves();
+        
+        while (<#condition#>) {
+            // Pick Lowest new priority compared previous removed state, and add to queue
+
+            <#statements#>
+        }
+        
+        
+    }
+     */
     
     
+    /*
     board.clear();
     tempVec.clear();
     tempVec.push_back("4");
@@ -110,6 +150,7 @@ int main(){
     
     State newState(minPriorityQueue.top());
     newState.printBoard();
+     */
     
     
     return 0;

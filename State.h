@@ -11,6 +11,8 @@ class State {
 private:
     // Variable: F, G, H
     int priority, moves, manhatten;
+
+    int blankX, blankY;
     
     // Variable: Current Board State
     vector< vector<string> > board;
@@ -29,6 +31,10 @@ public:
     // Constructor
     State( State* state );
     
+    vector<State> GenerateAllPossibleMoves();
+    
+    bool IsGoalState();
+    
     // Returns Priority value
     const int getPriority() const;
     
@@ -37,6 +43,10 @@ public:
     
     // Prints state info
     void printStateInfo();
+    
+    friend bool operator==(const State& lhs, const State& rhs);
+    friend bool operator!=(const State& lhs, const State& rhs);
+
 };
 
 

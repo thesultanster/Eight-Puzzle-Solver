@@ -24,9 +24,59 @@ State::State(State* state) {
     
     // Copy Board
     this->board = state->board;
-    this->manhatten = state->manhatten;
+    // Recalculate so we can get the blankX and blankY values
+    this->manhatten = CalculateManhattenDistance(this->board);
     this->moves = state->moves;
     this->priority = state->priority;
+}
+
+vector<State> State::GenerateAllPossibleMoves(){
+    
+    vector<State> states;
+    vector< vector<string> > newBoard;
+    
+    // Move Left, if possible
+    if((blankY - 1) >= 0){
+        newBoard = this->board;
+        iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX].begin() + (blankY-1));
+        State newState( newBoard, this->moves+1 );
+        states.push_back(newState);
+        newState.printBoard();
+        newState.printStateInfo();
+    }
+    
+    // Move Right, if possible
+    if((blankY + 1) >= 0){
+        newBoard = this->board;
+        iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX].begin() + (blankY+1));
+        State newState( newBoard, this->moves+1 );
+        states.push_back(newState);
+        newState.printBoard();
+        newState.printStateInfo();
+    }
+    
+    // Move Top, if possible
+    if((blankX + 1) >= 0){
+        newBoard = this->board;
+        iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX+1].begin() + (blankY));
+        State newState( newBoard, this->moves+1 );
+        states.push_back(newState);
+        newState.printBoard();
+        newState.printStateInfo();
+    }
+    
+    // Move Bottom, if possible
+    if((blankX - 1) >= 0){
+        newBoard = this->board;
+        iter_swap(newBoard[blankX].begin() + blankY, newBoard[blankX-1].begin() + (blankY));
+        State newState( newBoard, this->moves+1 );
+        states.push_back(newState);
+        newState.printBoard();
+        newState.printStateInfo();
+    }
+    
+    return states;
+
 }
 
 // Calculates Distance of current tile to goal tile
@@ -65,6 +115,12 @@ int State::CalculateManhattenDistance(vector< vector<string> > &board){
                 // Sum up all manhatten distances to generate total heuristic value
                 distance += DistanceToGoal(x,y);
             }
+            // Save Location of blank tile for later usage
+            else {
+                
+                this->blankX = x;
+                this->blankY = y;
+            }
         }
     }
     
@@ -77,6 +133,22 @@ int State::CalculateManhattenDistance(vector< vector<string> > &board){
 // Prints the full board
 const int State::getPriority() const{
     return this->priority;
+}
+
+bool operator==(const State& lhs, const State& rhs){
+    
+    for (int i = 0; i < lhs.board.size(); i++)
+        for (int j = 0; j < lhs.board[i].size(); j++)
+            if(lhs.board[i][j] != rhs.board[i][j])
+                return false;
+    
+    return true;
+}
+
+
+bool operator!=(const State& lhs, const State& rhs)
+{
+    return !operator==(lhs,rhs);
 }
 
 // Prints the full board
