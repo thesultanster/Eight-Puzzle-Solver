@@ -12,8 +12,10 @@ private:
     // Variable: F, G, H
     int priority, moves, manhatten, misplaced;
 
+    // Locatoin of blank space
     int blankX, blankY;
     
+    // Type of algorithm 0 Uniform, 1 Manhatten, 2 Misplaced
     int algo;
     
     // Parent State
@@ -30,6 +32,9 @@ private:
     
     // Function: Calculates current tile position distance from goal tile position
     int DistanceToGoal(int x, int y);
+    
+    // Function: Initializes variables
+    void initialize(int algo, int moves);
     
 public:
     

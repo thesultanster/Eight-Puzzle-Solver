@@ -38,8 +38,7 @@ void GenerateAllPossibleMoves( State state, priority_queue<State,vector<State>, 
     int blankY = state.getBlankY();
     vector<State*> states;
     
-    
-    //cout << "Children ===========" << endl;
+    // Total possible moves are 4
     
     // Move Left, if possible
     if((blankY - 1) >= 0){
@@ -97,14 +96,13 @@ void GenerateAllPossibleMoves( State state, priority_queue<State,vector<State>, 
             max = activeQueue.size();
     }
     
-    //cout << "====================" << endl;
-    
     
 }
 
 int main(){
     
     int max=1;
+    int expanded=0;
     
     string row;
     vector<string> tempVec;
@@ -112,7 +110,7 @@ int main(){
     priority_queue<State,vector<State>, CompareState > activeQueue;
     map< string , bool> visitedMap;
     
-    
+    /*
     tempVec.push_back("0");
     tempVec.push_back("1");
     tempVec.push_back("3");
@@ -129,13 +127,13 @@ int main(){
     tempVec.push_back("8");
     tempVec.push_back("6");
     board.push_back(tempVec);
+    */
     
     
-    /*
     cout << "Enter your puzzle, use a zero to represent the blank" << endl;
     cout << "Enter the first row,   use space or tabs between numbers\t";
     getline(cin, row);
-    tempVec =  split( row , ' ');
+    tempVec = split( row , ' ');
     board.push_back(tempVec);
     
     cout << "Enter the second row,  use space or tabs between numbers\t";
@@ -145,20 +143,23 @@ int main(){
     
     cout << "Enter the third row,   use space or tabs between numbers\t";
     getline(cin, row);
-    tempVec =  split( row , ' ');
+    tempVec = split( row , ' ');
     board.push_back(tempVec);
-    */
+    
     cout << "0. Uniform Cost Search\n1. Manhatten Heuristic\n2. Misplaced Tile Heuristic\n";
     int algo;
     cin >> algo;
     
     
     State state(board, 0, algo);
+    state.printBoard();
 
+    // Push roote state
     activeQueue.push(state);
 
     while (true) {
         
+        // If queue is empty
         if (activeQueue.empty()) {
             cout << "Active Queue is Empty" << endl;
             break;
@@ -173,7 +174,6 @@ int main(){
         cout << "*********************" << endl << endl;
 
         // If this new state is the goal state, then exit
-        //cout << "Check If Goal State" << endl;
         if(state.isGoalState()){
             
             cout << "Goal State Found!!!" << endl;
@@ -181,18 +181,18 @@ int main(){
             state.printStateInfo();
             
             cout << endl << "Max Queue Size: " << max << endl;
+            cout << "Expanded Nodes: " << expanded << endl;
             break;
         }
         
         // Remove new state form active list
         activeQueue.pop();
+        expanded++;
         
         // Calculate All possible next states
-        //cout << "Generate Children" << endl;
         GenerateAllPossibleMoves(state,activeQueue, visitedMap, algo, max);
         
-    
-            // Pick Lowest new priority compared previous removed state, and add to queue
+
     }
     
     

@@ -8,48 +8,26 @@ using namespace std;
 State::State(vector< vector<string> > board, int moves, int algo) {
     
     this->parent = NULL;
-    
-    this->algo = algo;
-    
-    
-    // Copy Board
-    this->board = board;
-    
-    // Calculate Manhatten Distance
-    this->manhatten = CalculateManhattenDistance(board);
-    
-    // Number of moves
-    this->moves = moves;
-    
-    // Calculate Priority
-    switch (algo) {
-        case 0:
-            this->priority = this->moves;
-            break;
-        case 1:
-            this->priority = this->moves + this->manhatten;
-            break;
-        case 2:
-            this->misplaced = CalculateMisplacedTile(board);
-            this->priority = this->moves + this->misplaced;
-            break;
-        default:
-            break;
-    }}
+    initialize(algo, moves);
+}
 
 // Constructor
 State::State(State* parent, vector< vector<string> > board, int moves, int algo) {
     
     this->parent = parent;
+    initialize(algo, moves);
     
+}
+
+void State::initialize( vector< vector<string> > &board, int algo, int moves){
+    
+    // Set algorithm type
     this->algo = algo;
     
     // Copy Board
     this->board = board;
     
-    
     // Calculate Manhatten Distance
-    // Calculates blank X and Y
     this->manhatten = CalculateManhattenDistance(board);
     
     // Number of moves
@@ -70,6 +48,7 @@ State::State(State* parent, vector< vector<string> > board, int moves, int algo)
         default:
             break;
     }
+    
 }
 
 
@@ -160,9 +139,6 @@ int State::CalculateMisplacedTile(vector< vector<string> > &board){
         }
     }
     
-    // TODO: Delete This
-    //cout << endl << number << endl;
-    
     return number;
     
 }
@@ -176,6 +152,7 @@ State* State::getParent() {
     return this;
 }
 
+// Checks in if current board is the goal state
 bool State::isGoalState() {
     
     int sum = 1;
@@ -195,10 +172,11 @@ bool State::isGoalState() {
         }
     }
     
-    //cout << "outside check loop" << endl;
     return true;
 
 }
+
+// Getters
 
 int State::getBlankX(){
     return this->blankX;
@@ -261,7 +239,6 @@ void State::printStateInfo(){
     }
     
     
-    
     cout << "Moves: "               << this->moves      << endl;
     cout << "Priority : "           << this->priority   << endl << endl;
 }
@@ -284,9 +261,8 @@ bool operator!=(const State& lhs, const State& rhs)
     return !operator==(lhs,rhs);
 }
 
+// Overload Function
 State& State::operator=(State rhs){
-    
-
     
     for (int i = 0; i < this->board.size(); i++)
         for (int j = 0; j < this->board[i].size(); j++)
@@ -303,7 +279,6 @@ State& State::operator=(State rhs){
     this->algo = rhs.algo;
     
     return *this;
-    
     
 }
 
