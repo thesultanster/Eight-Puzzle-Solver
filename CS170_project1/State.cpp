@@ -8,14 +8,14 @@ using namespace std;
 State::State(vector< vector<string> > board, int moves, int algo) {
     
     this->parent = NULL;
-    initialize(algo, moves);
+    initialize(board, algo, moves);
 }
 
 // Constructor
 State::State(State* parent, vector< vector<string> > board, int moves, int algo) {
     
     this->parent = parent;
-    initialize(algo, moves);
+    initialize(board, algo, moves);
     
 }
 

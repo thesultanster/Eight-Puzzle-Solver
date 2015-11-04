@@ -34,7 +34,7 @@ private:
     int DistanceToGoal(int x, int y);
     
     // Function: Initializes variables
-    void initialize(int algo, int moves);
+    void initialize(vector< vector<string> > &board, int algo, int moves);
     
 public:
     
