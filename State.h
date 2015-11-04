@@ -10,7 +10,7 @@ class State {
     
 private:
     // Variable: F, G, H
-    int priority, moves, manhatten;
+    int priority, moves, manhatten, misplaced;
 
     int blankX, blankY;
     
@@ -25,7 +25,7 @@ private:
     // Function: Calculates Manhatten Distance of current board
     int CalculateManhattenDistance(vector< vector<string> > &board);
     
-    // Function: Calculates Manhatten Distance of current board
+    // Function: Calculates Misplaced Tile of current board
     int CalculateMisplacedTile(vector< vector<string> > &board);
     
     // Function: Calculates current tile position distance from goal tile position

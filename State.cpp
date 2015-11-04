@@ -11,6 +11,7 @@ State::State(vector< vector<string> > board, int moves, int algo) {
     
     this->algo = algo;
     
+    
     // Copy Board
     this->board = board;
     
@@ -23,11 +24,13 @@ State::State(vector< vector<string> > board, int moves, int algo) {
     // Calculate Priority
     switch (algo) {
         case 0:
+            this->priority = this->moves;
             break;
         case 1:
             this->priority = this->moves + this->manhatten;
             break;
         case 2:
+            this->misplaced = CalculateMisplacedTile(board);
             this->priority = this->moves + this->misplaced;
             break;
         default:
@@ -44,7 +47,9 @@ State::State(State* parent, vector< vector<string> > board, int moves, int algo)
     // Copy Board
     this->board = board;
     
+    
     // Calculate Manhatten Distance
+    // Calculates blank X and Y
     this->manhatten = CalculateManhattenDistance(board);
     
     // Number of moves
@@ -53,11 +58,13 @@ State::State(State* parent, vector< vector<string> > board, int moves, int algo)
     // Calculate Priority
     switch (algo) {
         case 0:
+            this->priority = this->moves;
             break;
         case 1:
             this->priority = this->moves + this->manhatten;
             break;
         case 2:
+            this->misplaced = CalculateMisplacedTile(board);
             this->priority = this->moves + this->misplaced;
             break;
         default:
@@ -119,6 +126,47 @@ int State::CalculateManhattenDistance(vector< vector<string> > &board){
 
 }
 
+// Calculates Misplaced Tile
+int State::CalculateMisplacedTile(vector< vector<string> > &board){
+    
+    int number = 0;
+    
+    vector<int> tempVec;
+    vector< vector<int> > tempBoard;
+
+    tempVec.push_back(1);
+    tempVec.push_back(2);
+    tempVec.push_back(3);
+    tempBoard.push_back(tempVec);
+    
+    tempVec.clear();
+    tempVec.push_back(4);
+    tempVec.push_back(5);
+    tempVec.push_back(6);
+    tempBoard.push_back(tempVec);
+    
+    tempVec.clear();
+    tempVec.push_back(7);
+    tempVec.push_back(8);
+    tempVec.push_back(0);
+    tempBoard.push_back(tempVec);
+    
+    // For every tile
+    for (int x = 0; x < board.size(); x++){
+        for (int y = 0; y < board[x].size(); y++){
+            int currentValue = atoi(board[x][y].c_str());
+            if(tempBoard[x][y] != currentValue)
+                number++;
+        }
+    }
+    
+    // TODO: Delete This
+    //cout << endl << number << endl;
+    
+    return number;
+    
+}
+
 // Prints the full board
 const int State::getPriority() const{
     return this->priority;
@@ -147,7 +195,7 @@ bool State::isGoalState() {
         }
     }
     
-    cout << "outside check loop" << endl;
+    //cout << "outside check loop" << endl;
     return true;
 
 }
@@ -195,7 +243,25 @@ void State::printBoard(){
 
 // Prints State Information
 void State::printStateInfo(){
-    cout << "Manhatten Distance: "  << this->manhatten  << endl;
+    
+    
+    // Calculate Priority
+    switch (algo) {
+        case 0:
+            cout << "Uniform Cost No Heuristic: " << endl;
+            break;
+        case 1:
+            cout << "Manhatten Distance: "  << this->manhatten  << endl;
+            break;
+        case 2:
+            cout << "Misplaced Tiles: "  << this->misplaced  << endl;
+            break;
+        default:
+            break;
+    }
+    
+    
+    
     cout << "Moves: "               << this->moves      << endl;
     cout << "Priority : "           << this->priority   << endl << endl;
 }
@@ -230,6 +296,7 @@ State& State::operator=(State rhs){
     this->parent = rhs.parent;
     this->moves = rhs.moves;
     this->manhatten = rhs.manhatten;
+    this->misplaced = rhs.misplaced;
     this->priority = rhs.priority;
     this->blankX = rhs.blankX;
     this->blankY = rhs.blankY;
