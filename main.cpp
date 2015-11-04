@@ -32,7 +32,7 @@ struct CompareState : public binary_function<State, State, bool>
 };
 
 
-void GenerateAllPossibleMoves( State state, priority_queue<State,vector<State>, CompareState > &activeQueue,map< string , bool> &visitedMap, int algo){
+void GenerateAllPossibleMoves( State state, priority_queue<State,vector<State>, CompareState > &activeQueue,map< string , bool> &visitedMap, int algo, int &max){
     
     int blankX = state.getBlankX();
     int blankY = state.getBlankY();
@@ -92,6 +92,9 @@ void GenerateAllPossibleMoves( State state, priority_queue<State,vector<State>, 
             //newState.printBoard();
             //newState.printStateInfo();
         }
+        
+        if(activeQueue.size() >= max)
+            max = activeQueue.size();
     }
     
     //cout << "====================" << endl;
@@ -99,8 +102,9 @@ void GenerateAllPossibleMoves( State state, priority_queue<State,vector<State>, 
     
 }
 
-
 int main(){
+    
+    int max=1;
     
     string row;
     vector<string> tempVec;
@@ -150,13 +154,9 @@ int main(){
     
     
     State state(board, 0, algo);
-    state.printBoard();
-    state.printStateInfo();
 
     activeQueue.push(state);
-    
-    
-    
+
     while (true) {
         
         if (activeQueue.empty()) {
@@ -166,7 +166,7 @@ int main(){
         
         // Top off best state from queue
         State state = activeQueue.top();
-        cout << "State Topped: *******" << endl;
+        cout << "State Popped:" << endl;
         state.printBoard();
         state.printStateInfo();
         visitedMap[state.getString()] = true;
@@ -175,9 +175,12 @@ int main(){
         // If this new state is the goal state, then exit
         //cout << "Check If Goal State" << endl;
         if(state.isGoalState()){
+            
             cout << "Goal State Found!!!" << endl;
             state.printBoard();
             state.printStateInfo();
+            
+            cout << endl << "Max Queue Size: " << max << endl;
             break;
         }
         
@@ -186,46 +189,11 @@ int main(){
         
         // Calculate All possible next states
         //cout << "Generate Children" << endl;
-        GenerateAllPossibleMoves(state,activeQueue, visitedMap, algo);
+        GenerateAllPossibleMoves(state,activeQueue, visitedMap, algo, max);
         
     
             // Pick Lowest new priority compared previous removed state, and add to queue
-
-
     }
-        
-        
-    
-    
-    
-    
-    /*
-    board.clear();
-    tempVec.clear();
-    tempVec.push_back("4");
-    tempVec.push_back("1");
-    tempVec.push_back("3");
-    board.push_back(tempVec);
-    
-    tempVec.clear();
-    tempVec.push_back("0");
-    tempVec.push_back("2");
-    tempVec.push_back("5");
-    board.push_back(tempVec);
-    
-    tempVec.clear();
-    tempVec.push_back("7");
-    tempVec.push_back("8");
-    tempVec.push_back("6");
-    board.push_back(tempVec);
-    
-    
-    State state2(board, 1);
-    state2.printBoard();
-    state2.printStateInfo();
-    activeQueue.push(&state2);
-    */
-    
     
     
     return 0;
