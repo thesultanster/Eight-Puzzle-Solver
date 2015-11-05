@@ -224,23 +224,27 @@ void State::printStateInfo(){
     
     
     // Calculate Priority
+    cout << "The best state to expand with a g(n) = "<< this->moves << " and h(n) = ";
+    
+    
     switch (algo) {
         case 0:
-            cout << "Uniform Cost No Heuristic: " << endl;
+            cout << "N/A";
             break;
         case 1:
-            cout << "Manhatten Distance: "  << this->manhatten  << endl;
+            cout << this->manhatten;
             break;
         case 2:
-            cout << "Misplaced Tiles: "  << this->misplaced  << endl;
+            cout << this->misplaced;
             break;
         default:
             break;
     }
     
     
-    cout << "Moves: "               << this->moves      << endl;
-    cout << "Priority : "           << this->priority   << endl << endl;
+    
+    
+    cout << " is " <<  this->priority << endl << endl;
 }
 
 // Friend Overload Function

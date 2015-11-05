@@ -99,6 +99,37 @@ void GenerateAllPossibleMoves( State state, priority_queue<State,vector<State>, 
     
 }
 
+
+
+// A utility function to count inversions in given array 'arr[]'
+int getInvCount(int arr[])
+{
+    int inv_count = 0;
+    for (int i = 0; i < 9 - 1; i++)
+        for (int j = i+1; j < 9; j++) {
+            cout << arr[i] << ", " << arr[j] ;
+            // Value 0 is used for empty space
+            if (arr[j] && arr[i] && arr[i] > arr[j]) {
+                inv_count++;
+                cout << ", " << "inv";
+            }
+            cout << endl;
+        }
+    return inv_count;
+}
+
+
+// This function returns true if given 8 puzzle is solvable.
+bool isSolvable(int puzzle[3][3])
+{
+    // Count inversions in given 8 puzzle
+    int invCount = getInvCount((int *)puzzle);
+    
+    // return true if inversion count is even.
+    return (invCount%2 == 0);
+}
+
+
 int main(){
     
     int max=1;
@@ -151,8 +182,9 @@ int main(){
     cin >> algo;
     
     
+    
     State state(board, 0, algo);
-    state.printBoard();
+    //state.printBoard();
 
     // Push roote state
     activeQueue.push(state);
@@ -168,8 +200,8 @@ int main(){
         // Top off best state from queue
         State state = activeQueue.top();
         cout << "State Popped:" << endl;
-        state.printBoard();
         state.printStateInfo();
+        state.printBoard();
         visitedMap[state.getString()] = true;
         cout << "*********************" << endl << endl;
 
@@ -177,11 +209,9 @@ int main(){
         if(state.isGoalState()){
             
             cout << "Goal State Found!!!" << endl;
-            state.printBoard();
-            state.printStateInfo();
+            cout << endl << "To solve this problem the search algorithm expanded a total of " << expanded << " Nodes." << endl;
+            cout << "The maximum number of nodes in the queue at any one time was " << max << endl;
             
-            cout << endl << "Max Queue Size: " << max << endl;
-            cout << "Expanded Nodes: " << expanded << endl;
             break;
         }
         
