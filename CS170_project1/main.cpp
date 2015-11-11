@@ -141,25 +141,6 @@ int main(){
     priority_queue<State,vector<State>, CompareState > activeQueue;
     map< string , bool> visitedMap;
     
-    /*
-    tempVec.push_back("0");
-    tempVec.push_back("1");
-    tempVec.push_back("3");
-    board.push_back(tempVec);
-    
-    tempVec.clear();
-    tempVec.push_back("4");
-    tempVec.push_back("2");
-    tempVec.push_back("5");
-    board.push_back(tempVec);
-    
-    tempVec.clear();
-    tempVec.push_back("7");
-    tempVec.push_back("8");
-    tempVec.push_back("6");
-    board.push_back(tempVec);
-    */
-    
     
     cout << "Enter your puzzle, use a zero to represent the blank" << endl;
     cout << "Enter the first row,   use space or tabs between numbers\t";
